@@ -1,0 +1,72 @@
+{
+  "name": "wyrihaximus/react-awaitable-observable",
+  "description": "\ud83d\udee0\ufe0f Test utilities for api-clients packages",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Cees-Jan Kiewiet",
+      "email": "ceesjank@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^8.1"
+  },
+  "require-dev": {
+    "wyrihaximus/async-test-utilities": "^4.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "WyriHaximus\\TestUtilities\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "WyriHaximus\\Tests\\TestUtilities\\": "tests/"
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "composer/package-versions-deprecated": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "ergebnis/composer-normalize": true,
+      "icanhazstring/composer-unused": true,
+      "infection/extension-installer": true
+    },
+    "platform": {
+      "php": "8.1.1"
+    },
+    "sort-packages": true
+  },
+  "extra": {
+    "unused": [
+      "php",
+      "dereuromark/composer-prefer-lowest",
+      "friendsofphp/php-cs-fixer",
+      "icanhazstring/composer-unused",
+      "infection/infection",
+      "jakobbuis/simple-slow-test-reporter",
+      "php-coveralls/php-coveralls",
+      "php-parallel-lint/php-console-highlighter",
+      "php-parallel-lint/php-parallel-lint",
+      "maglnet/composer-require-checker",
+      "nunomaduro/collision",
+      "orklah/psalm-insane-comparison",
+      "phpstan/phpstan",
+      "phpunit/phpunit",
+      "psalm/plugin-phpunit",
+      "roave/backward-compatibility-check",
+      "roave/infection-static-analysis-plugin",
+      "slevomat/coding-standard",
+      "vimeo/psalm",
+      "wyrihaximus/phpstan-rules-wrapper"
+    ]
+  },
+  "scripts": {
+    "post-install-cmd": [
+      "composer normalize"
+    ],
+    "post-update-cmd": [
+      "composer normalize"
+    ]
+  }
+}
