@@ -1,6 +1,6 @@
 {
   "name": "wyrihaximus/react-awaitable-observable",
-  "description": "\ud83d\udee0\ufe0f Test utilities for api-clients packages",
+  "description": "\ud83d\udee0\ufe0f Make observables foreachable using async &amp; await",
   "license": "MIT",
   "authors": [
     {
