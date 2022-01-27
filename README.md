@@ -22,13 +22,16 @@ The `awaitObservable` function will accept any observable and turn it into an it
 use Rx\Observable;
 use Rx\Scheduler\ImmediateScheduler;
 
+use function React\Async\async;
 use function WyriHaximus\React\awaitObservable;
 
-$observable = Observable::fromArray(range(0, 1337), new ImmediateScheduler());
+async(function () {
+    $observable = Observable::fromArray(range(0, 1337), new ImmediateScheduler());
 
-foreach (awaitObservable($observable) as $integer) {
-    echo $integer; // outputs 01234....13361337
-}
+    foreach (awaitObservable($observable) as $integer) {
+        echo $integer; // outputs 01234....13361337
+    }
+});
 ```
 
 ## Contributing ##
