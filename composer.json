@@ -9,19 +9,25 @@
     }
   ],
   "require": {
-    "php": "^8.1"
+    "php": "^8.1",
+    "react/async": "dev-main",
+    "react/promise": "^2.8",
+    "reactivex/rxphp": "^2.0"
   },
   "require-dev": {
     "wyrihaximus/async-test-utilities": "^4.2"
   },
   "autoload": {
     "psr-4": {
-      "WyriHaximus\\TestUtilities\\": "src/"
-    }
+      "WyriHaximus\\React\\": "src/"
+    },
+    "files": [
+      "src/functions_include.php"
+    ]
   },
   "autoload-dev": {
     "psr-4": {
-      "WyriHaximus\\Tests\\TestUtilities\\": "tests/"
+      "WyriHaximus\\Tests\\React\\": "tests/"
     }
   },
   "config": {
@@ -39,26 +45,7 @@
   },
   "extra": {
     "unused": [
-      "php",
-      "dereuromark/composer-prefer-lowest",
-      "friendsofphp/php-cs-fixer",
-      "icanhazstring/composer-unused",
-      "infection/infection",
-      "jakobbuis/simple-slow-test-reporter",
-      "php-coveralls/php-coveralls",
-      "php-parallel-lint/php-console-highlighter",
-      "php-parallel-lint/php-parallel-lint",
-      "maglnet/composer-require-checker",
-      "nunomaduro/collision",
-      "orklah/psalm-insane-comparison",
-      "phpstan/phpstan",
-      "phpunit/phpunit",
-      "psalm/plugin-phpunit",
-      "roave/backward-compatibility-check",
-      "roave/infection-static-analysis-plugin",
-      "slevomat/coding-standard",
-      "vimeo/psalm",
-      "wyrihaximus/phpstan-rules-wrapper"
+      "php"
     ]
   },
   "scripts": {
