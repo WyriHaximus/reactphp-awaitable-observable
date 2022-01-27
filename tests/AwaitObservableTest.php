@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace WyriHaximus\Tests\React;
 
+use Exception;
 use React\EventLoop\Loop;
 use React\EventLoop\TimerInterface;
 use Rx\Observable;
@@ -77,5 +78,32 @@ final class AwaitObservableTest extends AsyncTestCase
         })());
 
         self::assertSame(range(1, 13), $integers);
+    }
+
+    /**
+     * @test
+     */
+    public function throw(): void
+    {
+        $error = new Exception('oops');
+        self::expectException($error::class);
+        self::expectExceptionMessage($error->getMessage());
+        self::expectOutputString('tiktik');
+
+        $observable = new Subject();
+
+        Loop::futureTick(static function () use ($observable, $error): void {
+            echo 'tik';
+            Loop::futureTick(static function () use ($observable, $error): void {
+                echo 'tik';
+                $observable->onError($error);
+            });
+        });
+
+        $this->await(async(static function () use ($observable): void {
+            foreach (awaitObservable($observable) as $void) {
+                echo 'tok';
+            }
+        })());
     }
 }
