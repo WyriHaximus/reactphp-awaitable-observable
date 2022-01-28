@@ -48,13 +48,13 @@ final class AwaitObservableTest extends AsyncTestCase
             });
         });
 
-        Loop::addTimer(0.01, static function () use ($observable): void {
+        Loop::addTimer(0.1, static function () use ($observable): void {
             echo 'tik';
             $observable->onNext(2);
         });
 
         $count = 3;
-        Loop::addPeriodicTimer(0.02, static function (TimerInterface $timer) use ($observable, &$count): void {
+        Loop::addPeriodicTimer(0.2, static function (TimerInterface $timer) use ($observable, &$count): void {
             echo 'tik';
             $observable->onNext($count++);
 
@@ -115,12 +115,12 @@ final class AwaitObservableTest extends AsyncTestCase
         $error = new Exception('oops');
         self::expectException($error::class);
         self::expectExceptionMessage($error->getMessage());
-        self::expectOutputString('tiktoktiktoktiktoktiktuktoktaktek');
+        self::expectOutputString('tiktoktiktoktiktoktiktuktoktak');
 
         $observable = new Subject();
 
         $count = 0;
-        Loop::addPeriodicTimer(0.02, static function (TimerInterface $timer) use ($observable, &$count): void {
+        Loop::addPeriodicTimer(0.1, static function (TimerInterface $timer) use ($observable, &$count): void {
             echo 'tik';
             $observable->onNext($count++);
 
@@ -132,12 +132,9 @@ final class AwaitObservableTest extends AsyncTestCase
             Loop::cancelTimer($timer);
         });
 
-        Loop::addTimer(0.2, static function () use ($observable, $error): void {
+        Loop::addTimer(0.8, static function () use ($observable, $error): void {
             echo 'tak';
-            Loop::futureTick(static function () use ($observable, $error): void {
-                echo 'tek';
-                $observable->onError($error);
-            });
+            $observable->onError($error);
         });
 
         $this->await(async(static function () use ($observable): void {
