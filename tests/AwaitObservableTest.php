@@ -106,4 +106,46 @@ final class AwaitObservableTest extends AsyncTestCase
             }
         })());
     }
+
+    /**
+     * @test
+     */
+    public function throwAfterSeveralItems(): void
+    {
+        $error = new Exception('oops');
+        self::expectException($error::class);
+        self::expectExceptionMessage($error->getMessage());
+        self::expectOutputString('tiktoktiktoktiktoktiktuktoktaktek');
+
+        $observable = new Subject();
+
+        $count = 0;
+        Loop::addPeriodicTimer(0.02, static function (TimerInterface $timer) use ($observable, &$count): void {
+            echo 'tik';
+            $observable->onNext($count++);
+
+            if ($count <= 3) {
+                return;
+            }
+
+            echo 'tuk';
+            Loop::cancelTimer($timer);
+        });
+
+        Loop::addTimer(0.2, static function () use ($observable, $error): void {
+            echo 'tak';
+            Loop::futureTick(static function () use ($observable, $error): void {
+                echo 'tek';
+                $observable->onError($error);
+            });
+        });
+
+        $this->await(async(static function () use ($observable): void {
+            foreach (awaitObservable($observable) as $void) {
+                echo 'tok';
+            }
+
+            echo 'kat';
+        })());
+    }
 }
