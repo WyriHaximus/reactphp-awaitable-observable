@@ -34,6 +34,31 @@ async(function () {
 });
 ```
 
+## Breaking the iterator ##
+
+The example above assumes you won't break the iterator. There are however situations where you want to short circuit
+the iterator, for such situations the `break` method is provided.
+
+```php
+use Rx\Observable;
+use Rx\Scheduler\ImmediateScheduler;
+
+use function React\Async\async;
+use function WyriHaximus\React\awaitObservable;
+
+async(function () {
+    $observable = Observable::fromArray(range(0, 1337), new ImmediateScheduler());
+
+    $iterator = awaitObservable($observable);
+    foreach ($iterator as $integer) {
+        echo $integer; // outputs 01234
+        if ($integer >= 4) {
+            $iterator->break();
+        }
+    }
+});
+```
+
 ## Contributing ##
 
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details.

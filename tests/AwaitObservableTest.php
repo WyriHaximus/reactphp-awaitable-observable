@@ -11,6 +11,7 @@ use Rx\Observable;
 use Rx\Scheduler\ImmediateScheduler;
 use Rx\Subject\Subject;
 use WyriHaximus\AsyncTestUtilities\AsyncTestCase;
+use WyriHaximus\React\AwaitingIterator;
 
 use function range;
 use function React\Async\async;
@@ -144,5 +145,39 @@ final class AwaitObservableTest extends AsyncTestCase
 
             echo 'kat';
         })());
+    }
+
+    /**
+     * @test
+     */
+    public function break(): void
+    {
+        $observable = new Subject();
+        $iterator   = new AwaitingIterator($observable);
+
+        $count = 0;
+        Loop::addPeriodicTimer(0.1, static function (TimerInterface $timer) use ($observable, &$count): void {
+            $observable->onNext($count++);
+
+            if ($count <= 13) {
+                return;
+            }
+
+            Loop::cancelTimer($timer);
+        });
+
+        self::assertSame(3, $this->await(async(static function () use ($iterator): int {
+            $count = 0;
+            foreach ($iterator as $void) {
+                $count++;
+                if ($count < 3) {
+                    continue;
+                }
+
+                $iterator->break();
+            }
+
+            return $count;
+        })()));
     }
 }
