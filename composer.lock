@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "19ba8453ed1ea7da98cc92d9bfb9f990",
+    "content-hash": "d8116ed6b4a330e74f2b2b1949daf270",
     "packages": [
         {
             "name": "react/async",
-            "version": "dev-main",
+            "version": "4.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/reactphp/async.git",
-                "reference": "ff11a7aa9eea7104af8f05bafbc85422dac4b8ab"
+                "reference": "1986075aa6e055a75824f8a7228a2ace144950f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/reactphp/async/zipball/ff11a7aa9eea7104af8f05bafbc85422dac4b8ab",
-                "reference": "ff11a7aa9eea7104af8f05bafbc85422dac4b8ab",
+                "url": "https://api.github.com/repos/reactphp/async/zipball/1986075aa6e055a75824f8a7228a2ace144950f4",
+                "reference": "1986075aa6e055a75824f8a7228a2ace144950f4",
                 "shasum": ""
             },
             "require": {
@@ -31,12 +31,12 @@
             "default-branch": true,
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "React\\Async\\": "src/"
-                },
                 "files": [
                     "src/functions_include.php"
-                ]
+                ],
+                "psr-4": {
+                    "React\\Async\\": "src/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -71,7 +71,7 @@
             ],
             "support": {
                 "issues": "https://github.com/reactphp/async/issues",
-                "source": "https://github.com/reactphp/async/tree/main"
+                "source": "https://github.com/reactphp/async/tree/4.x"
             },
             "funding": [
                 {
@@ -83,7 +83,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-01-05T06:37:17+00:00"
+            "time": "2022-02-18T08:12:23+00:00"
         },
         {
             "name": "react/event-loop",
