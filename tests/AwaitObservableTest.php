@@ -180,4 +180,25 @@ final class AwaitObservableTest extends AsyncTestCase
             return $count;
         })()));
     }
+
+    /**
+     * @test
+     */
+    public function emptyObservableThatTookAWhileToComplete(): void
+    {
+        $observable = new Subject();
+        $iterator   = new AwaitingIterator($observable);
+
+        Loop::addTimer(0.1, static function () use ($observable): void {
+            $observable->onCompleted();
+        });
+
+        self::assertTrue($this->await(async(static function () use ($iterator): bool {
+            foreach ($iterator as $void) {
+                return false;
+            }
+
+            return true;
+        })()));
+    }
 }

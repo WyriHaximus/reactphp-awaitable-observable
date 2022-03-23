@@ -17,9 +17,9 @@ final class AwaitingIterator implements Iterator
 {
     private SplQueue $queue;
     private DisposableInterface $disposable;
-    private ?Deferred $next = null;
-    private bool $completed = false;
-    private int $key        = 0;
+    private ?Deferred $valid = null;
+    private bool $completed  = false;
+    private int $key         = 0;
 
     public function __construct(Observable $observable)
     {
@@ -45,20 +45,26 @@ final class AwaitingIterator implements Iterator
 
     private function push(mixed $value): void
     {
-        if ($this->next instanceof Deferred) {
-            $next       = $this->next;
-            $this->next = null;
-            $next->resolve($value);
-
+        $this->queue->enqueue($value);
+        if ($this->valid === null) {
             return;
         }
 
-        $this->queue->enqueue($value);
+        $valid       = $this->valid;
+        $this->valid = null;
+        $valid->resolve(true);
     }
 
     private function complete(): void
     {
         $this->completed = true;
+        if ($this->valid === null) {
+            return;
+        }
+
+        $valid       = $this->valid;
+        $this->valid = null;
+        $valid->resolve(false);
     }
 
     /**
@@ -66,13 +72,7 @@ final class AwaitingIterator implements Iterator
      */
     public function current(): mixed
     {
-        if ($this->queue->count() > 0) {
-            return $this->queue->dequeue();
-        }
-
-        $this->next = new Deferred();
-
-        return await($this->next->promise());
+        return $this->queue->dequeue();
     }
 
     public function next(): void
@@ -90,7 +90,20 @@ final class AwaitingIterator implements Iterator
 
     public function valid(): bool
     {
-        return ! $this->completed || $this->queue->count() > 0;
+        if ($this->queue->count() > 0) {
+            return true;
+        }
+
+        if (! $this->completed) {
+            $this->valid = new Deferred();
+
+            /**
+             * @phpstan-ignore-next-line
+             */
+            return await($this->valid->promise());
+        }
+
+        return false;
     }
 
     public function rewind(): void
