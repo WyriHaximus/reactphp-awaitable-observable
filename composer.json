@@ -15,7 +15,7 @@
     "reactivex/rxphp": "^2.0"
   },
   "require-dev": {
-    "wyrihaximus/async-test-utilities": "^4.2"
+    "wyrihaximus/async-test-utilities": "^5.0"
   },
   "autoload": {
     "psr-4": {
