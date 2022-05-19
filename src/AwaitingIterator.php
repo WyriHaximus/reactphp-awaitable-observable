@@ -67,9 +67,6 @@ final class AwaitingIterator implements Iterator
         $valid->resolve(false);
     }
 
-    /**
-     * @phpstan-ignore-next-line
-     */
     public function current(): mixed
     {
         return $this->queue->dequeue();
@@ -80,14 +77,14 @@ final class AwaitingIterator implements Iterator
         // no-op
     }
 
-    /**
-     * @phpstan-ignore-next-line
-     */
     public function key(): mixed
     {
         return $this->key++;
     }
 
+    /**
+     * @psalm-suppress MixedInferredReturnType
+     */
     public function valid(): bool
     {
         if ($this->queue->count() > 0) {
@@ -99,6 +96,7 @@ final class AwaitingIterator implements Iterator
 
             /**
              * @phpstan-ignore-next-line
+             * @psalm-suppress MixedReturnStatement
              */
             return await($this->valid->promise());
         }
