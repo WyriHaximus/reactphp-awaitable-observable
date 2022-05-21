@@ -3,9 +3,11 @@ SHELL=bash
 
 .PHONY: *
 
-COMPOSER_CACHE_DIR=$(shell composer config --global cache-dir -q || echo ${HOME}/.composer-php/cache)
 COMPOSER_SHOW_EXTENSION_LIST=$(shell composer show -t | grep -o "\-\-\(ext-\).\+" | sort | uniq | cut -d- -f4- | tr -d '\n' | grep . | sed  '/^$$/d' | xargs | sed -e 's/ /, /g' | tr -cd '[:alnum:],' | sed 's/.$$//')
 SLIM_DOCKER_IMAGE=$(shell php -r 'echo count(array_intersect(["gd", "vips"], explode(",", "${COMPOSER_SHOW_EXTENSION_LIST}"))) > 0 ? "" : "-slim";')
+COMPOSER_CACHE_DIR=$(shell composer config --global cache-dir -q || echo ${HOME}/.composer-php/cache)
+PHP_VERSION:=$(shell docker run --rm -v "`pwd`:`pwd`" jess/jq jq -r -c '.config.platform.php' "`pwd`/composer.json" | php -r "echo str_replace('|', '.', explode('.', implode('|', explode('.', stream_get_contents(STDIN), 2)), 2)[0]);")
+COMPOSER_CONTAINER_CACHE_DIR=$(shell docker run --rm -it "ghcr.io/wyrihaximusnet/php:${PHP_VERSION}-nts-alpine${SLIM_DOCKER_IMAGE}-dev" composer config --global cache-dir -q || echo ${HOME}/.composer-php/cache)
 
 ifneq ("$(wildcard /.you-are-in-a-wyrihaximus.net-php-docker-image)","")
     IN_DOCKER=TRUE
@@ -16,10 +18,9 @@ endif
 ifeq ("$(IN_DOCKER)","TRUE")
 	DOCKER_RUN:=
 else
-	PHP_VERSION:=$(shell docker run --rm -v "`pwd`:`pwd`" jess/jq jq -r -c '.config.platform.php' "`pwd`/composer.json" | php -r "echo str_replace('|', '.', explode('.', implode('|', explode('.', stream_get_contents(STDIN), 2)), 2)[0]);")
 	DOCKER_RUN:=docker run --rm -it \
 		-v "`pwd`:`pwd`" \
-		-v "${COMPOSER_CACHE_DIR}:/home/app/.composer/cache" \
+		-v "${COMPOSER_CACHE_DIR}:${COMPOSER_CONTAINER_CACHE_DIR}" \
 		-w "`pwd`" \
 		"ghcr.io/wyrihaximusnet/php:${PHP_VERSION}-nts-alpine${SLIM_DOCKER_IMAGE}-dev"
 endif
@@ -66,7 +67,7 @@ composer-require-checker: ## Ensure we require every package used in this packag
 	$(DOCKER_RUN) vendor/bin/composer-require-checker --ignore-parse-errors --ansi -vvv --config-file=./etc/qa/composer-require-checker.json
 
 composer-unused: ## Ensure we don't require any package we don't use in this package directly
-	$(DOCKER_RUN) composer unused --ansi
+	$(DOCKER_RUN) vendor/bin/composer-unused --ansi
 
 composer-install: ## Install dependencies
 	$(DOCKER_RUN) composer install --no-progress --ansi --no-interaction --prefer-dist -o
