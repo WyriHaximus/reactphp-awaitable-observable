@@ -37,7 +37,7 @@ final class AwaitObservableTest extends AsyncTestCase
      */
     public function awaiting(): void
     {
-        self::expectOutputString('tiktiktoktiktoktiktoktiktoktiktoktiktoktiktoktiktoktiktoktiktoktiktoktiktoktiktuktoktak');
+        self::expectOutputString('tiktiktoktiktoktiktoktiktoktiktoktiktoktiktoktiktoktiktoktiktoktiktoktiktoktiktoktuktak');
 
         $observable = new Subject();
 
@@ -116,7 +116,7 @@ final class AwaitObservableTest extends AsyncTestCase
         $error = new Exception('oops');
         self::expectException($error::class);
         self::expectExceptionMessage($error->getMessage());
-        self::expectOutputString('tiktoktiktoktiktoktiktuktoktak');
+        self::expectOutputString('tiktoktiktoktiktoktiktoktuktak');
 
         $observable = new Subject();
 
