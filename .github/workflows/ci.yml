@@ -27,6 +27,7 @@ jobs:
       - lint-json
     outputs:
       version: ${{ steps.supported-versions-matrix.outputs.version }}
+      upcoming: ${{ steps.supported-versions-matrix.outputs.upcoming }}
     steps:
       - uses: actions/checkout@v1
       - id: supported-versions-matrix
@@ -96,7 +97,13 @@ jobs:
       - name: Fetch Tags
         run: git fetch --depth=1 origin +refs/tags/*:refs/tags/* || true
         if: matrix.check == 'backward-compatibility-check'
+      - run: make ${{ matrix.check }} || true
+        if: needs.supported-versions-matrix.outputs.upcoming == matrix.php
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+          COVERALLS_RUN_LOCALLY: ${{ secrets.COVERALLS_RUN_LOCALLY }}
       - run: make ${{ matrix.check }}
+        if: needs.supported-versions-matrix.outputs.upcoming != matrix.php
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
           COVERALLS_RUN_LOCALLY: ${{ secrets.COVERALLS_RUN_LOCALLY }}
