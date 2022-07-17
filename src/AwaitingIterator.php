@@ -67,20 +67,30 @@ final class AwaitingIterator implements Iterator
         $valid->resolve(false);
     }
 
+    // phpcs:disable
+    /**
+     * @return mixed
+     */
     public function current(): mixed
     {
         return $this->queue->dequeue();
     }
+    // phpcs:enable
 
     public function next(): void
     {
         // no-op
     }
 
+    // phpcs:disable
+    /**
+     * @return mixed
+     */
     public function key(): mixed
     {
         return $this->key++;
     }
+    // phpcs:enable
 
     /**
      * @psalm-suppress MixedInferredReturnType
