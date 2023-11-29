@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "364d935f90e9c8d7a0559cd1a6ec9005",
+    "content-hash": "582c437837236698d289b59f68bf8660",
     "packages": [
         {
             "name": "react/async",
