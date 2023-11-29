@@ -7,21 +7,22 @@ namespace WyriHaximus\React;
 use Iterator;
 use React\Promise\Deferred;
 use Rx\DisposableInterface;
-use Rx\Observable;
+use Rx\ObservableInterface;
 use SplQueue;
 use Throwable;
 
 use function React\Async\await;
 
+/** @psalm-suppress MissingTemplateParam */
 final class AwaitingIterator implements Iterator
 {
     private SplQueue $queue;
     private DisposableInterface $disposable;
-    private ?Deferred $valid = null;
-    private bool $completed  = false;
-    private int $key         = 0;
+    private Deferred|null $valid = null;
+    private bool $completed      = false;
+    private int $key             = 0;
 
-    public function __construct(Observable $observable)
+    public function __construct(ObservableInterface $observable)
     {
         $this->queue      = new SplQueue();
         $this->disposable = $observable->subscribe(
@@ -92,9 +93,7 @@ final class AwaitingIterator implements Iterator
     }
     // phpcs:enable
 
-    /**
-     * @psalm-suppress MixedInferredReturnType
-     */
+    /** @psalm-suppress MixedInferredReturnType */
     public function valid(): bool
     {
         if ($this->queue->count() > 0) {

@@ -1,8 +1,5 @@
 parameters:
 	checkGenericClassInNonGenericObjectType: false
-	ergebnis:
-		classesAllowedToBeExtended:
-			- WyriHaximus\AsyncTestUtilities\AsyncTestCase
 
 includes:
 	- ../../vendor/wyrihaximus/async-test-utilities/rules.neon

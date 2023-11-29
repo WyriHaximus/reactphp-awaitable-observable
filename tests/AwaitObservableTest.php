@@ -15,13 +15,12 @@ use WyriHaximus\React\AwaitingIterator;
 
 use function range;
 use function React\Async\async;
+use function React\Async\await;
 use function WyriHaximus\React\awaitObservable;
 
 final class AwaitObservableTest extends AsyncTestCase
 {
-    /**
-     * @test
-     */
+    /** @test */
     public function basic(): void
     {
         $observable = Observable::fromArray(range(0, 1337), new ImmediateScheduler());
@@ -32,44 +31,45 @@ final class AwaitObservableTest extends AsyncTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function awaiting(): void
     {
         self::expectOutputString('tiktiktoktiktoktiktoktiktoktiktoktiktoktiktoktiktoktiktoktiktoktiktoktiktoktiktoktuktak');
 
         $observable = new Subject();
 
-        Loop::futureTick(static function () use ($observable): void {
-            echo 'tik';
+        // Put it in a timer because of how libuv works
+        Loop::addTimer(0, static function () use ($observable): void {
             Loop::futureTick(static function () use ($observable): void {
                 echo 'tik';
-                $observable->onNext(1);
+                Loop::futureTick(static function () use ($observable): void {
+                    echo 'tik';
+                    $observable->onNext(1);
+                });
+            });
+
+            Loop::addTimer(0.1, static function () use ($observable): void {
+                echo 'tik';
+                $observable->onNext(2);
+            });
+
+            $count = 3;
+            Loop::addPeriodicTimer(0.2, static function (TimerInterface $timer) use ($observable, &$count): void {
+                echo 'tik';
+                $observable->onNext($count++);
+
+                if ($count <= 13) {
+                    return;
+                }
+
+                echo 'tuk';
+                Loop::cancelTimer($timer);
+                $observable->onCompleted();
             });
         });
 
-        Loop::addTimer(0.1, static function () use ($observable): void {
-            echo 'tik';
-            $observable->onNext(2);
-        });
-
-        $count = 3;
-        Loop::addPeriodicTimer(0.2, static function (TimerInterface $timer) use ($observable, &$count): void {
-            echo 'tik';
-            $observable->onNext($count++);
-
-            if ($count <= 13) {
-                return;
-            }
-
-            echo 'tuk';
-            Loop::cancelTimer($timer);
-            $observable->onCompleted();
-        });
-
         $integers = [];
-        $this->await(async(static function () use ($observable, &$integers): void {
+        await(async(static function () use ($observable, &$integers): void {
             foreach (awaitObservable($observable) as $integer) {
                 echo 'tok';
                 $integers[] = $integer;
@@ -81,9 +81,7 @@ final class AwaitObservableTest extends AsyncTestCase
         self::assertSame(range(1, 13), $integers);
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function throw(): void
     {
         $error = new Exception('oops');
@@ -101,16 +99,14 @@ final class AwaitObservableTest extends AsyncTestCase
             });
         });
 
-        $this->await(async(static function () use ($observable): void {
+        await(async(static function () use ($observable): void {
             foreach (awaitObservable($observable) as $void) {
                 echo 'tok';
             }
         })());
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function throwAfterSeveralItems(): void
     {
         $error = new Exception('oops');
@@ -121,7 +117,7 @@ final class AwaitObservableTest extends AsyncTestCase
         $observable = new Subject();
 
         $count = 0;
-        Loop::addPeriodicTimer(0.1, static function (TimerInterface $timer) use ($observable, &$count): void {
+        Loop::addPeriodicTimer(0.1, static function (TimerInterface $timer) use ($observable, &$count, $error): void {
             echo 'tik';
             $observable->onNext($count++);
 
@@ -131,14 +127,11 @@ final class AwaitObservableTest extends AsyncTestCase
 
             echo 'tuk';
             Loop::cancelTimer($timer);
-        });
-
-        Loop::addTimer(0.8, static function () use ($observable, $error): void {
             echo 'tak';
             $observable->onError($error);
         });
 
-        $this->await(async(static function () use ($observable): void {
+        await(async(static function () use ($observable): void {
             foreach (awaitObservable($observable) as $void) {
                 echo 'tok';
             }
@@ -147,9 +140,7 @@ final class AwaitObservableTest extends AsyncTestCase
         })());
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function break(): void
     {
         $observable = new Subject();
@@ -166,7 +157,7 @@ final class AwaitObservableTest extends AsyncTestCase
             Loop::cancelTimer($timer);
         });
 
-        self::assertSame(3, $this->await(async(static function () use ($iterator): int {
+        self::assertSame(3, await(async(static function () use ($iterator): int {
             $count = 0;
             foreach ($iterator as $void) {
                 $count++;
@@ -181,9 +172,7 @@ final class AwaitObservableTest extends AsyncTestCase
         })()));
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function emptyObservableThatTookAWhileToComplete(): void
     {
         $observable = new Subject();
@@ -193,7 +182,7 @@ final class AwaitObservableTest extends AsyncTestCase
             $observable->onCompleted();
         });
 
-        self::assertTrue($this->await(async(static function () use ($iterator): bool {
+        self::assertTrue(await(async(static function () use ($iterator): bool {
             foreach ($iterator as $void) {
                 return false;
             }
