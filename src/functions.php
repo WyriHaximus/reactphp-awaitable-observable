@@ -6,9 +6,7 @@ namespace WyriHaximus\React;
 
 use Rx\Observable;
 
-/**
- * @return iterable<mixed>
- */
+/** @return iterable<mixed> */
 function awaitObservable(Observable $observable): iterable
 {
     return new AwaitingIterator($observable);

@@ -1,9 +1,10 @@
 # [ReactPHP](https://github.com/reactphp/) awaitable observable
 
-[![Continuous Integration](https://github.com/WyriHaximus/reactphp-awaitable-observable/actions/workflows/ci.yml/badge.svg)](https://github.com/WyriHaximus/reactphp-awaitable-observable/actions/workflows/ci.yml)
-[![Latest Stable Version](https://poser.pugx.org/WyriHaximus/react-awaitable-observable/v/stable.png)](https://packagist.org/packages/WyriHaximus/react-awaitable-observable)
-[![Total Downloads](https://poser.pugx.org/WyriHaximus/react-awaitable-observable/downloads.png)](https://packagist.org/packages/WyriHaximus/react-awaitable-observable/stats)
-[![License](https://poser.pugx.org/WyriHaximus/react-awaitable-observable/license.png)](https://packagist.org/packages/wyrihaximus/react-awaitable-observable)
+![Continuous Integration](https://github.com/wyrihaximus/reactphp-awaitable-observable/workflows/Continuous%20Integration/badge.svg)
+[![Latest Stable Version](https://poser.pugx.org/wyrihaximus/react-awaitable-observable/v/stable.png)](https://packagist.org/packages/wyrihaximus/react-awaitable-observable)
+[![Total Downloads](https://poser.pugx.org/wyrihaximus/react-awaitable-observable/downloads.png)](https://packagist.org/packages/wyrihaximus/react-awaitable-observable/stats)
+[![Type Coverage](https://shepherd.dev/github/WyriHaximus/reactphp-awaitable-observable/coverage.svg)](https://shepherd.dev/github/WyriHaximus/reactphp-awaitable-observable)
+[![License](https://poser.pugx.org/wyrihaximus/react-awaitable-observable/license.png)](https://packagist.org/packages/wyrihaximus/react-awaitable-observable)
 
 ### Installation ###
 

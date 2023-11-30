@@ -10,18 +10,14 @@ use WyriHaximus\React\AwaitingIterator;
 
 final class AwaitingIteratorTest extends AsyncTestCase
 {
-    /**
-     * @test
-     */
+    /** @test */
     public function keyNeverReturnsTheSameValue(): void
     {
         $ai = new AwaitingIterator(new Subject());
         self::assertNotSame($ai->key(), $ai->key());
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function countsUpwards(): void
     {
         $ai = new AwaitingIterator(new Subject());
