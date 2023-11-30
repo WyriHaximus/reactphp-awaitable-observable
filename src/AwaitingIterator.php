@@ -13,19 +13,27 @@ use Throwable;
 
 use function React\Async\await;
 
-/** @psalm-suppress MissingTemplateParam */
+/**
+ * @template T
+ * @template-implements Iterator<T>
+ */
 final class AwaitingIterator implements Iterator
 {
+    /** @var SplQueue<T> */
     private SplQueue $queue;
     private DisposableInterface $disposable;
+
+    /** @var Deferred<bool>|null */
     private Deferred|null $valid = null;
     private bool $completed      = false;
     private int $key             = 0;
 
+    /** @param ObservableInterface<T> $observable */
     public function __construct(ObservableInterface $observable)
     {
         $this->queue      = new SplQueue();
         $this->disposable = $observable->subscribe(
+            /** @param T $value */
             function (mixed $value): void {
                     $this->push($value);
             },
@@ -44,6 +52,7 @@ final class AwaitingIterator implements Iterator
         $this->completed = true;
     }
 
+    /** @param T $value */
     private function push(mixed $value): void
     {
         $this->queue->enqueue($value);
@@ -70,7 +79,7 @@ final class AwaitingIterator implements Iterator
 
     // phpcs:disable
     /**
-     * @return mixed
+     * @return T
      */
     public function current(): mixed
     {
@@ -93,7 +102,6 @@ final class AwaitingIterator implements Iterator
     }
     // phpcs:enable
 
-    /** @psalm-suppress MixedInferredReturnType */
     public function valid(): bool
     {
         if ($this->queue->count() > 0) {
@@ -101,12 +109,11 @@ final class AwaitingIterator implements Iterator
         }
 
         if (! $this->completed) {
-            $this->valid = new Deferred();
+            /** @var Deferred<bool> $deferred */
+            $deferred    = new Deferred();
+            $this->valid = $deferred;
+            unset($deferred);
 
-            /**
-             * @phpstan-ignore-next-line
-             * @psalm-suppress MixedReturnStatement
-             */
             return await($this->valid->promise());
         }
 
