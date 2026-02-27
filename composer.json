@@ -9,13 +9,14 @@
     }
   ],
   "require": {
-    "php": "^8.2",
-    "react/async": "^4",
-    "react/promise": "^2.10 || ^3",
-    "reactivex/rxphp": "^2.0.12"
+    "php": "^8.4",
+    "react/async": "^4.3.0",
+    "react/promise": "^2.10 || ^3.3.0",
+    "reactivex/rxphp": "^2.1.0"
   },
   "require-dev": {
-    "wyrihaximus/async-test-utilities": "^7.2"
+    "wyrihaximus/async-test-utilities": "^12.0.0",
+    "wyrihaximus/makefiles": "^0.10.2"
   },
   "autoload": {
     "psr-4": {
@@ -36,19 +37,22 @@
       "dealerdirect/phpcodesniffer-composer-installer": true,
       "ergebnis/composer-normalize": true,
       "icanhazstring/composer-unused": true,
-      "infection/extension-installer": true
+      "infection/extension-installer": true,
+      "phpstan/extension-installer": true,
+      "wyrihaximus/makefiles": true,
+      "wyrihaximus/test-utilities": true
     },
     "platform": {
-      "php": "8.2.13"
+      "php": "8.4.13"
     },
     "sort-packages": true
   },
   "scripts": {
     "post-install-cmd": [
-      "composer normalize"
+      "make on-install-or-update || true"
     ],
     "post-update-cmd": [
-      "composer normalize"
+      "make on-install-or-update || true"
     ]
   }
 }
