@@ -13,11 +13,10 @@ use Throwable;
 
 use function React\Async\await;
 
-/** @psalm-suppress MissingTemplateParam */
 final class AwaitingIterator implements Iterator
 {
-    private SplQueue $queue;
-    private DisposableInterface $disposable;
+    private readonly SplQueue $queue;
+    private readonly DisposableInterface $disposable;
     private Deferred|null $valid = null;
     private bool $completed      = false;
     private int $key             = 0;
@@ -29,7 +28,7 @@ final class AwaitingIterator implements Iterator
             function (mixed $value): void {
                     $this->push($value);
             },
-            static function (Throwable $throwable): void {
+            static function (Throwable $throwable): never {
                     throw $throwable;
             },
             function (): void {
@@ -47,7 +46,7 @@ final class AwaitingIterator implements Iterator
     private function push(mixed $value): void
     {
         $this->queue->enqueue($value);
-        if ($this->valid === null) {
+        if (! $this->valid instanceof Deferred) {
             return;
         }
 
@@ -59,7 +58,7 @@ final class AwaitingIterator implements Iterator
     private function complete(): void
     {
         $this->completed = true;
-        if ($this->valid === null) {
+        if (! $this->valid instanceof Deferred) {
             return;
         }
 
@@ -93,7 +92,6 @@ final class AwaitingIterator implements Iterator
     }
     // phpcs:enable
 
-    /** @psalm-suppress MixedInferredReturnType */
     public function valid(): bool
     {
         if ($this->queue->count() > 0) {
@@ -103,10 +101,6 @@ final class AwaitingIterator implements Iterator
         if (! $this->completed) {
             $this->valid = new Deferred();
 
-            /**
-             * @phpstan-ignore-next-line
-             * @psalm-suppress MixedReturnStatement
-             */
             return await($this->valid->promise());
         }
 

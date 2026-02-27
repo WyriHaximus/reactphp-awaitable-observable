@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace WyriHaximus\Tests\React;
 
 use Exception;
+use PHPUnit\Framework\Attributes\Test;
 use React\EventLoop\Loop;
 use React\EventLoop\TimerInterface;
 use Rx\Observable;
@@ -20,7 +21,7 @@ use function WyriHaximus\React\awaitObservable;
 
 final class AwaitObservableTest extends AsyncTestCase
 {
-    /** @test */
+    #[Test]
     public function basic(): void
     {
         $observable = Observable::fromArray(range(0, 1337), new ImmediateScheduler());
@@ -31,7 +32,7 @@ final class AwaitObservableTest extends AsyncTestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function awaiting(): void
     {
         self::expectOutputString('tiktiktoktiktoktiktoktiktoktiktoktiktoktiktoktiktoktiktoktiktoktiktoktiktoktiktoktuktak');
@@ -81,7 +82,7 @@ final class AwaitObservableTest extends AsyncTestCase
         self::assertSame(range(1, 13), $integers);
     }
 
-    /** @test */
+    #[Test]
     public function throw(): void
     {
         $error = new Exception('oops');
@@ -106,7 +107,7 @@ final class AwaitObservableTest extends AsyncTestCase
         })());
     }
 
-    /** @test */
+    #[Test]
     public function throwAfterSeveralItems(): void
     {
         $error = new Exception('oops');
@@ -140,7 +141,7 @@ final class AwaitObservableTest extends AsyncTestCase
         })());
     }
 
-    /** @test */
+    #[Test]
     public function break(): void
     {
         $observable = new Subject();
@@ -172,7 +173,7 @@ final class AwaitObservableTest extends AsyncTestCase
         })()));
     }
 
-    /** @test */
+    #[Test]
     public function emptyObservableThatTookAWhileToComplete(): void
     {
         $observable = new Subject();
