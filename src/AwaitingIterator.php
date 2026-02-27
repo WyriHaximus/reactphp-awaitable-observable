@@ -13,10 +13,14 @@ use Throwable;
 
 use function React\Async\await;
 
+/** @phpstan-ignore missingType.generics */
 final class AwaitingIterator implements Iterator
 {
+    /** @phpstan-ignore missingType.generics */
     private readonly SplQueue $queue;
-    private readonly DisposableInterface $disposable;
+    private DisposableInterface|null $disposable = null;
+    private ObservableInterface|null $observable;
+    /** @phpstan-ignore missingType.generics */
     private Deferred|null $valid = null;
     private bool $completed      = false;
     private int $key             = 0;
@@ -24,22 +28,13 @@ final class AwaitingIterator implements Iterator
     public function __construct(ObservableInterface $observable)
     {
         $this->queue      = new SplQueue();
-        $this->disposable = $observable->subscribe(
-            function (mixed $value): void {
-                    $this->push($value);
-            },
-            static function (Throwable $throwable): never {
-                    throw $throwable;
-            },
-            function (): void {
-                    $this->complete();
-            },
-        );
+        $this->observable = $observable;
     }
 
+    /** @api */
     public function break(): void
     {
-        $this->disposable->dispose();
+        $this->disposable?->dispose();
         $this->completed = true;
     }
 
@@ -94,6 +89,22 @@ final class AwaitingIterator implements Iterator
 
     public function valid(): bool
     {
+        if (! $this->disposable instanceof DisposableInterface) {
+            $observable       = $this->observable;
+            $this->observable = null;
+            $this->disposable = $observable?->subscribe(
+                function (mixed $value): void {
+                    $this->push($value);
+                },
+                static function (Throwable $throwable): never {
+                    throw $throwable;
+                },
+                function (): void {
+                    $this->complete();
+                },
+            );
+        }
+
         if ($this->queue->count() > 0) {
             return true;
         }
@@ -101,6 +112,7 @@ final class AwaitingIterator implements Iterator
         if (! $this->completed) {
             $this->valid = new Deferred();
 
+            /** @phpstan-ignore return.type */
             return await($this->valid->promise());
         }
 
