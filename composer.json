@@ -11,7 +11,7 @@
   "require": {
     "php": "^8.4",
     "react/async": "^4.3.0",
-    "react/promise": "^2.10 || ^3.3.0",
+    "react/promise": "^3.3.0",
     "reactivex/rxphp": "^2.1.0"
   },
   "require-dev": {
