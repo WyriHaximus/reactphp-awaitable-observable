@@ -20,7 +20,8 @@ final class AwaitingIterator implements Iterator
     private readonly SplQueue $queue;
     private DisposableInterface|null $disposable = null;
     private ObservableInterface|null $observable;
-    /** @phpstan-ignore missingType.generics */
+
+    /** @var Deferred<bool>|null  */
     private Deferred|null $valid = null;
     private bool $completed      = false;
     private int $key             = 0;
@@ -110,9 +111,10 @@ final class AwaitingIterator implements Iterator
         }
 
         if (! $this->completed) {
-            $this->valid = new Deferred();
+            /** @var Deferred<bool> $valid */
+            $valid       = new Deferred();
+            $this->valid = $valid;
 
-            /** @phpstan-ignore return.type */
             return await($this->valid->promise());
         }
 
