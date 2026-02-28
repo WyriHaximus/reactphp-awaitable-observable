@@ -11,6 +11,7 @@ use Rx\ObservableInterface;
 use SplQueue;
 use Throwable;
 
+use function is_bool;
 use function React\Async\await;
 
 /** @phpstan-ignore missingType.generics */
@@ -115,7 +116,13 @@ final class AwaitingIterator implements Iterator
             $valid       = new Deferred();
             $this->valid = $valid;
 
-            return await($this->valid->promise());
+            $isValid = await($valid->promise());
+            /** @phpstan-ignore function.alreadyNarrowedType */
+            if (! is_bool($isValid)) {
+                $isValid = false;
+            }
+
+            return $isValid;
         }
 
         return false;
