@@ -166,6 +166,7 @@ final class AwaitObservableTest extends AsyncTestCase
                     continue;
                 }
 
+                /** @phpstan-ignore method.deprecated */
                 $iterator->break();
             }
 

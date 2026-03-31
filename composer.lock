@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f4df8e3d0bbc89b115a5945a9eb95fec",
+    "content-hash": "705d5af8eb6e3f25a93a899b5b9714f8",
     "packages": [
         {
             "name": "react/async",
@@ -9711,6 +9711,62 @@
                 }
             ],
             "time": "2026-07-18T17:45:57+00:00"
+        },
+        {
+            "name": "wyrihaximus/ticking-promise",
+            "version": "3.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/WyriHaximus/TickingPromise.git",
+                "reference": "6a6076e7edc778b912ff5a231bfdb155aa49081d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/WyriHaximus/TickingPromise/zipball/6a6076e7edc778b912ff5a231bfdb155aa49081d",
+                "reference": "6a6076e7edc778b912ff5a231bfdb155aa49081d",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.4",
+                "react/event-loop": "^1.6.0",
+                "react/promise": "^3.3.0"
+            },
+            "require-dev": {
+                "wyrihaximus/async-test-utilities": "^12.1.0",
+                "wyrihaximus/makefiles": "^0.10.3"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/functions_include.php"
+                ],
+                "psr-4": {
+                    "WyriHaximus\\React\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Cees-Jan Kiewiet",
+                    "email": "ceesjank@gmail.com",
+                    "homepage": "http://wyrihaximus.net/"
+                }
+            ],
+            "description": "⏲️ Wrapping ticks into a promise",
+            "support": {
+                "issues": "https://github.com/WyriHaximus/TickingPromise/issues",
+                "source": "https://github.com/WyriHaximus/TickingPromise/tree/3.2.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/WyriHaximus",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-04-12T13:38:18+00:00"
         },
         {
             "name": "yamadashy/phpstan-friendly-formatter",
