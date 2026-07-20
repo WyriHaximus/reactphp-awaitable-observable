@@ -16,8 +16,8 @@
     "wyrihaximus/react-event-loop-rx-scheduler-hook-up": "^0.1.1"
   },
   "require-dev": {
-    "wyrihaximus/async-test-utilities": "^13.3.0",
-    "wyrihaximus/makefiles": "^0.12.3"
+    "wyrihaximus/async-test-utilities": "^13.4.1",
+    "wyrihaximus/makefiles": "^0.13.2"
   },
   "autoload": {
     "psr-4": {

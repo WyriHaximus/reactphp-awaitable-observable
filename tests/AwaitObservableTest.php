@@ -87,7 +87,7 @@ final class AwaitObservableTest extends AsyncTestCase
     {
         $error = new Exception('oops');
         self::expectException($error::class);
-        self::expectExceptionMessage($error->getMessage());
+        self::expectExceptionMessageIsOrContains($error->getMessage());
         self::expectOutputString('tiktik');
 
         $observable = new Subject();
@@ -112,7 +112,7 @@ final class AwaitObservableTest extends AsyncTestCase
     {
         $error = new Exception('oops');
         self::expectException($error::class);
-        self::expectExceptionMessage($error->getMessage());
+        self::expectExceptionMessageIsOrContains($error->getMessage());
         self::expectOutputString('tiktoktiktoktiktoktiktoktuktak');
 
         $observable = new Subject();
