@@ -17,19 +17,25 @@ use WeakReference;
 use function is_bool;
 use function React\Async\await;
 
-/** @phpstan-ignore missingType.generics */
+/**
+ * @template T
+ * @template-implements Iterator<T>
+ */
 final class AwaitingIterator implements Iterator
 {
-    /** @phpstan-ignore missingType.generics */
+    /** @var SplQueue<T> */
     private readonly SplQueue $queue;
     private DisposableInterface|null $disposable = null;
+
+    /** @var ObservableInterface<T>|null */
     private ObservableInterface|null $observable;
 
-    /** @var Deferred<bool>|null  */
+    /** @var Deferred<bool>|null */
     private Deferred|null $valid = null;
     private bool $completed      = false;
     private int $key             = 0;
 
+    /** @param ObservableInterface<T> $observable */
     public function __construct(ObservableInterface $observable)
     {
         $this->queue      = new SplQueue();
@@ -68,6 +74,7 @@ final class AwaitingIterator implements Iterator
         $this->completed = true;
     }
 
+    /** @param T $value */
     private function push(mixed $value): void
     {
         $this->queue->enqueue($value);
@@ -94,7 +101,7 @@ final class AwaitingIterator implements Iterator
 
     // phpcs:disable
     /**
-     * @return mixed
+     * @return T
      */
     public function current(): mixed
     {
