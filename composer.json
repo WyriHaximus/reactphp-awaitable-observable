@@ -11,13 +11,15 @@
   "require": {
     "php": "^8.4",
     "react/async": "^4.3.0",
+    "react/event-loop": "^1.6",
     "react/promise": "^3.3.0",
     "reactivex/rxphp": "^2.1.0",
     "wyrihaximus/react-event-loop-rx-scheduler-hook-up": "^0.1.1"
   },
   "require-dev": {
     "wyrihaximus/async-test-utilities": "^13.4.1",
-    "wyrihaximus/makefiles": "^0.13.2"
+    "wyrihaximus/makefiles": "^0.13.2",
+    "wyrihaximus/ticking-promise": "^3.2"
   },
   "autoload": {
     "psr-4": {

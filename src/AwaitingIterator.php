@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace WyriHaximus\React;
 
+use Deprecated;
 use Iterator;
+use React\EventLoop\Loop;
 use React\Promise\Deferred;
 use Rx\DisposableInterface;
 use Rx\ObservableInterface;
 use SplQueue;
 use Throwable;
+use WeakReference;
 
 use function is_bool;
 use function React\Async\await;
@@ -33,7 +36,32 @@ final class AwaitingIterator implements Iterator
         $this->observable = $observable;
     }
 
+    public function __destruct()
+    {
+        if ($this->completed) {
+            return;
+        }
+
+        $disposable = $this->disposable;
+        $valid      = $this->valid;
+
+        $this->completed  = true;
+        $this->valid      = null;
+        $this->disposable = null;
+
+        Loop::futureTick(static function () use ($disposable, $valid): void {
+            $disposable?->dispose();
+
+            if (! $valid instanceof Deferred) {
+                return;
+            }
+
+            $valid->resolve(false);
+        });
+    }
+
     /** @api */
+    #[Deprecated(message: 'With the __destruct() method this is no longer needed.')]
     public function break(): void
     {
         $this->disposable?->dispose();
@@ -94,15 +122,26 @@ final class AwaitingIterator implements Iterator
         if (! $this->disposable instanceof DisposableInterface) {
             $observable       = $this->observable;
             $this->observable = null;
+            $weakSelf         = WeakReference::create($this);
             $this->disposable = $observable?->subscribe(
-                function (mixed $value): void {
-                    $this->push($value);
+                static function (mixed $value) use ($weakSelf): void {
+                    $self = $weakSelf->get();
+                    if ($self === null) {
+                        return;
+                    }
+
+                    $self->push($value);
                 },
                 static function (Throwable $throwable): never {
                     throw $throwable;
                 },
-                function (): void {
-                    $this->complete();
+                static function () use ($weakSelf): void {
+                    $self = $weakSelf->get();
+                    if ($self === null) {
+                        return;
+                    }
+
+                    $self->complete();
                 },
             );
         }
