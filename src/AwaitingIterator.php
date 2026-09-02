@@ -158,7 +158,7 @@ final class AwaitingIterator implements Iterator
             $isValid = await($valid->promise());
             /** @phpstan-ignore function.alreadyNarrowedType */
             if (! is_bool($isValid)) {
-                $isValid = false;
+                return false;
             }
 
             return $isValid;
