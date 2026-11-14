@@ -6,7 +6,7 @@
 [![Type Coverage](https://shepherd.dev/github/WyriHaximus/reactphp-awaitable-observable/coverage.svg)](https://shepherd.dev/github/WyriHaximus/reactphp-awaitable-observable)
 [![License](https://poser.pugx.org/wyrihaximus/react-awaitable-observable/license.png)](https://packagist.org/packages/wyrihaximus/react-awaitable-observable)
 
-### Installation ###
+## Installation
 
 To install via [Composer](http://getcomposer.org/), use the command below, it will automatically detect the latest version and bind it with `^`.
 
@@ -14,7 +14,7 @@ To install via [Composer](http://getcomposer.org/), use the command below, it wi
 composer require wyrihaximus/react-awaitable-observable
 ```
 
-## Usage ##
+## Usage
 
 The `awaitObservable` function will accept any observable and turn it into an iterator, so it can be used inside
 `async` in an `foreach`:
@@ -35,16 +35,16 @@ async(function () {
 });
 ```
 
-## Breaking the iterator ##
+## Breaking the iterator
 
 There is a `break` method, but with the latest release it is deprecated over letting the language GC do it's job and
 clean up the unused iterator when you break in a loop.
 
-## Contributing ##
+## Contributing
 
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
-## License ##
+## License
 
 Copyright 2026 [Cees-Jan Kiewiet](https://wyrihaximus.net/)
 
