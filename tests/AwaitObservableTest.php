@@ -101,7 +101,8 @@ final class AwaitObservableTest extends AsyncTestCase
         });
 
         await(async(static function () use ($observable): void {
-            foreach (awaitObservable($observable) as $void) {
+            /** @phpstan-ignore foreach.unusedValue */
+            foreach (awaitObservable($observable) as $unusedValue) {
                 echo 'tok';
             }
         })());
@@ -133,7 +134,8 @@ final class AwaitObservableTest extends AsyncTestCase
         });
 
         await(async(static function () use ($observable): void {
-            foreach (awaitObservable($observable) as $void) {
+            /** @phpstan-ignore foreach.unusedValue */
+            foreach (awaitObservable($observable) as $unusedValue) {
                 echo 'tok';
             }
 
@@ -160,7 +162,8 @@ final class AwaitObservableTest extends AsyncTestCase
 
         self::assertSame(3, await(async(static function () use ($iterator): int {
             $count = 0;
-            foreach ($iterator as $void) {
+            /** @phpstan-ignore foreach.unusedValue */
+            foreach ($iterator as $unusedValue) {
                 $count++;
                 if ($count < 3) {
                     continue;
@@ -185,7 +188,8 @@ final class AwaitObservableTest extends AsyncTestCase
         });
 
         self::assertTrue(await(async(static function () use ($iterator): bool {
-            foreach ($iterator as $void) {
+            /** @phpstan-ignore foreach.unusedValue */
+            foreach ($iterator as $unusedValue) {
                 return false;
             }
 
